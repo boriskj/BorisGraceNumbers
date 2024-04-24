@@ -1,6 +1,21 @@
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import Random from "./Random";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import Country from "./Country";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 export default function App() {
   const [fact, setFact] = useState({});
@@ -13,6 +28,8 @@ export default function App() {
     "zelena",
     "oranzna",
   ]);
+
+  const [region, setRegion] = useState("Europe");
 
   async function getRandomFact() {
     const response = await fetch("http://numbersapi.com/random?json");
@@ -45,16 +62,33 @@ export default function App() {
   return (
     <>
       <div className="contanier">
-        <h1>Tukaj smo</h1>
+        <h3> izbrana regija: {region} </h3>
+        <Select onValueChange={(x) => setRegion(x)}>
+          <SelectTrigger className="w-[200px]">
+            <SelectValue placeholder="Regija" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Europe">Europa</SelectItem>
+            <SelectItem value="Asia">Azija</SelectItem>
+            <SelectItem value="Africa">Afrika</SelectItem>
+            <SelectItem value="Americas">Amerika</SelectItem>
+            <SelectItem value="Oceania">Oceanija</SelectItem>
+          </SelectContent>
+        </Select>
 
-        {countries
-          .filter((country) => country.region == "Asia")
-          .map((country) => (
-            <p>{country.name.common}</p>
-          ))}
-        {colors.map((c) => (
-          <p>{c}</p>
-        ))}
+        <Carousel>
+          <CarouselContent>
+            {countries
+              .filter((country) => country.region == region)
+              .map((country) => (
+                <CarouselItem className="basis-1/3">
+                  <Country data={country}></Country>
+                </CarouselItem>
+              ))}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
 
         <Input
           placeholder="Vnesi število, ki te zanima ..."
