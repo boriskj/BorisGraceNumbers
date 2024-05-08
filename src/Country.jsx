@@ -1,11 +1,25 @@
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
 export default function Country(props) {
-  const { flag, name } = props.data;
+  const { flag, name, flags } = props.data;
   return (
-    <div>
-      <p>
-        {flag}
-        {name.common}
-      </p>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>
+          {flag}
+          {name.common}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <img src={flags.png}></img>
+      </CardContent>
+    </Card>
   );
 }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import Random from "./Random";
+
 import {
   Select,
   SelectContent,
@@ -9,6 +10,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Country from "./Country";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -16,6 +26,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import Vaja from "./Vaja";
 
 export default function App() {
   const [fact, setFact] = useState({});
@@ -31,6 +42,8 @@ export default function App() {
 
   const [region, setRegion] = useState("Europe");
 
+  const [landlocked, setLandlocked] = useState(true);
+
   async function getRandomFact() {
     const response = await fetch("http://numbersapi.com/random?json");
     const data = await response.json();
@@ -44,7 +57,7 @@ export default function App() {
 
   async function getCountries() {
     const response = await fetch(
-      "https://restcountries.com/v3.1/all?fields=name,flag,border,region",
+      "https://restcountries.com/v3.1/all?fields=name,flag,borders,region,flags,landlocked",
     );
     const data = await response.json();
     setCountries(data);
@@ -61,25 +74,40 @@ export default function App() {
 
   return (
     <>
-      <div className="contanier">
+      <div className="container">
         <h3> izbrana regija: {region} </h3>
-        <Select onValueChange={(x) => setRegion(x)}>
-          <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="Regija" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="Europe">Europa</SelectItem>
-            <SelectItem value="Asia">Azija</SelectItem>
-            <SelectItem value="Africa">Afrika</SelectItem>
-            <SelectItem value="Americas">Amerika</SelectItem>
-            <SelectItem value="Oceania">Oceanija</SelectItem>
-          </SelectContent>
-        </Select>
-
+        <div className="grid grid-cols-3 gap-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Regija</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Select onValueChange={(x) => setRegion(x)}>
+                <SelectTrigger className="w-[200px]">
+                  <SelectValue placeholder="regija" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">vse regije</SelectItem>
+                  <SelectItem value="Europe">Europa</SelectItem>
+                  <SelectItem value="Asia">Azija</SelectItem>
+                  <SelectItem value="Africa">Afrika</SelectItem>
+                  <SelectItem value="Americas">Amerika</SelectItem>
+                  <SelectItem value="Oceania">Oceanija</SelectItem>
+                </SelectContent>
+              </Select>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Država nima morja</CardTitle>
+            </CardHeader>
+            <CardContent></CardContent>
+          </Card>
+        </div>
         <Carousel>
           <CarouselContent>
             {countries
-              .filter((country) => country.region == region)
+              .filter((country) => region == "all" || country.region == region)
               .map((country) => (
                 <CarouselItem className="basis-1/3">
                   <Country data={country}></Country>
