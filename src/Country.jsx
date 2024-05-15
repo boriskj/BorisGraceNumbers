@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 
 export default function Country(props) {
-  const { flag, name, flags } = props.data;
+  const { flag, name, flags, capital } = props.data;
   return (
     <Card>
       <CardHeader>
@@ -20,6 +20,16 @@ export default function Country(props) {
       <CardContent>
         <img src={flags.png}></img>
       </CardContent>
+      <CardFooter>
+        <div>
+          <p>glavno mesto</p>
+          <ul>
+            {capital.map((c) => {
+              c;
+            })}
+          </ul>
+        </div>
+      </CardFooter>
     </Card>
   );
 }
