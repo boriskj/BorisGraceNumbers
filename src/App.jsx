@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import Random from "./Random";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Slider } from "@/components/ui/slider";
 
 import {
   Select,
@@ -39,8 +41,9 @@ export default function App() {
     "zelena",
     "oranzna",
   ]);
+  const [region, setRegion] = useState("all");
 
-  const [region, setRegion] = useState("Europe");
+  const [borders, setBorders] = useState(1);
 
   const [landlocked, setLandlocked] = useState(true);
 
@@ -74,7 +77,7 @@ export default function App() {
 
   return (
     <>
-      <div className="container">
+      <div className="container flex h-full flex-col items-center justify-center gap-4">
         <h3> izbrana regija: {region} </h3>
         <div className="grid grid-cols-3 gap-2">
           <Card>
@@ -99,15 +102,37 @@ export default function App() {
           </Card>
           <Card>
             <CardHeader>
-              <CardTitle>Država nima morja</CardTitle>
+              <CardTitle>Države brez morja</CardTitle>
             </CardHeader>
-            <CardContent></CardContent>
+            <CardContent>
+              <Checkbox
+                checked={landlocked}
+                onCheckedChange={(value) => setLandlocked(value)}
+              ></Checkbox>
+              oznaci ce nima morja
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>stevilo sosednjih drzav: {borders}</CardTitle>
+
+              <CardContent>
+                <Slider
+                  defaultValue={[0]}
+                  max={15}
+                  step={1}
+                  onValueChange={(value) => setBorders(value)}
+                />
+              </CardContent>
+            </CardHeader>
           </Card>
         </div>
-        <Carousel>
+        <Carousel className="w-2/3">
           <CarouselContent>
             {countries
               .filter((country) => region == "all" || country.region == region)
+              .filter((country) => country.landlocked == landlocked)
+              .filter((country) => country.borders.length == borders)
               .map((country) => (
                 <CarouselItem className="basis-1/3">
                   <Country data={country}></Country>
